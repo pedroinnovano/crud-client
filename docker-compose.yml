@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ./docker/php
+      args:
+        UID: "${UID}"
+        GID: "${GID}"
+    container_name: crud-client-backend
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+    user: "${UID}:${GID}"
+    environment:
+      - UID=${UID}
+      - GID=${GID}
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: crud-client-nginx
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    volumes:
+      - ./backend:/var/www
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:8
+    container_name: crud-client-mysql
+    restart: unless-stopped
+    ports:
+      - "3369:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: myapp
+      MYSQL_USER: myapp
+      MYSQL_PASSWORD: secret
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    container_name: crud-client-redis
+    restart: unless-stopped
+    ports:
+      - "6969:6379"
+    networks:
+      - app-network
+
+  frontend:
+    image: node:20.19.0
+    container_name: crud-client-frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    ports:
+      - "5174:5173"
+    networks:
+      - app-network
+
+volumes:
+  mysql-data:
+
+networks:
+  app-network:
+    driver: bridge
