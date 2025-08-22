@@ -1,53 +1,86 @@
 <template>
-  <div class="bg-white p-6 rounded-xl shadow-md border border-zinc-200">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="text-xl font-semibold text-zinc-800">Contatos</h2>
+  <div class="bg-white">
+    <!-- Search Bar -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="relative flex-1 max-w-md">
+        <input
+          type="text"
+          placeholder="Buscar contato"
+          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          v-model="searchQuery"
+        >
+        <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
       <button
-          class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm flex items-center gap-2 transition"
-          @click="$emit('create')"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition ml-4"
+        @click="$emit('create')"
       >
         <span class="text-lg">+</span> Adicionar contato
       </button>
+      <button class="ml-2 p-2 text-gray-400 hover:text-gray-600">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+        </svg>
+      </button>
     </div>
 
+    <!-- Table -->
     <div class="overflow-x-auto">
-      <table class="min-w-full text-sm text-left">
-        <thead class="bg-zinc-50 text-zinc-500 text-xs uppercase tracking-wider">
+      <table class="min-w-full text-sm">
+        <thead class="bg-gray-50">
         <tr>
-          <th class="px-4 py-3">Nome</th>
-          <th class="px-4 py-3">E-mail</th>
-          <th class="px-4 py-3">Telefone</th>
-          <th class="px-4 py-3">Cidade</th>
-          <th class="px-4 py-3">Estado</th>
-          <th class="px-4 py-3 text-center">Ações</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center">
+            Nome
+            <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telefone</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cidade</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Idade</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="bg-white divide-y divide-gray-200">
         <tr
-            v-for="customer in customers"
+            v-for="customer in filteredCustomers"
             :key="customer.id"
-            class="border-t hover:bg-zinc-50 transition"
+            class="hover:bg-gray-50 transition"
         >
-          <td class="px-4 py-3">{{ customer.name }}</td>
-          <td class="px-4 py-3">{{ customer.email }}</td>
-          <td class="px-4 py-3">{{ customer.phone }}</td>
-          <td class="px-4 py-3">{{ customer.city }}</td>
-          <td class="px-4 py-3">{{ customer.state }}</td>
-          <td class="px-4 py-3 text-center">
-            <button
-                class="text-indigo-600 hover:underline text-xs font-medium"
-                @click="$emit('edit', customer)"
-            >
-              ✏️ Editar
-            </button>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex-shrink-0 h-10 w-10">
+              <img class="h-10 w-10 rounded-full object-cover" :src="customer.photo" :alt="customer.name" />
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">{{ customer.name }}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">{{ customer.email }}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">{{ customer.phone }}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">{{ customer.city }}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">{{ customer.state }}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">{{ customer.age }}</div>
           </td>
         </tr>
 
-        <tr v-if="!customers.length">
-          <td colspan="6" class="text-center py-12 text-zinc-400">
+        <tr v-if="!filteredCustomers.length">
+          <td colspan="7" class="text-center py-12 text-gray-400">
             <div class="flex flex-col items-center justify-center">
               <svg
-                  class="w-16 h-16 mb-4 text-zinc-300"
+                  class="w-16 h-16 mb-4 text-gray-300"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="1.5"
@@ -56,12 +89,12 @@
                 <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                 />
               </svg>
               <p class="mb-2 text-sm">Ainda não há contatos</p>
               <button
-                  class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 text-sm"
+                  class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm"
                   @click="$emit('create')"
               >
                 + Adicionar contato
@@ -73,28 +106,62 @@
       </table>
     </div>
 
-    <!-- Paginação -->
-    <div v-if="pagination && pagination.last_page > 1" class="flex justify-center gap-2 mt-6">
-      <button
-          v-for="page in pagination.last_page"
-          :key="page"
-          @click="$emit('change-page', page)"
+    <!-- Pagination -->
+    <div v-if="pagination && pagination.last_page > 1" class="flex items-center justify-between mt-6">
+      <div class="text-sm text-gray-700">
+        Mostrando {{ pagination.from }} a {{ pagination.to }} de {{ pagination.total }} resultados
+      </div>
+      <div class="flex gap-1">
+        <button
+          v-for="link in pagination.links"
+          :key="link.label"
+          @click="handlePaginationClick(link)"
+          :disabled="!link.url || link.active"
           :class="[
-          'px-3 py-1 rounded-md text-sm',
-          page === pagination.current_page
-            ? 'bg-indigo-600 text-white'
-            : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
-        ]"
-      >
-        {{ page }}
-      </button>
+            'px-3 py-2 text-sm border rounded-md transition-colors',
+            link.active
+              ? 'bg-blue-600 text-white border-blue-600'
+              : link.url
+              ? 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+              : 'bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed'
+          ]"
+          v-html="link.label"
+        >
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
+import { ref, computed } from 'vue'
+
+const props = defineProps({
   customers: Array,
   pagination: Object
 })
+
+const searchQuery = ref('')
+
+const filteredCustomers = computed(() => {
+  if (!searchQuery.value) {
+    return props.customers
+  }
+  return props.customers.filter(customer => 
+    customer.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    customer.email.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    customer.phone.includes(searchQuery.value) ||
+    customer.city.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    customer.state.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    customer.age.toString().includes(searchQuery.value)
+  )
+})
+
+function handlePaginationClick(link) {
+  if (link.url && !link.active && link.page) {
+    emit('change-page', link.page)
+  }
+}
+
+const emit = defineEmits(['create', 'edit', 'change-page'])
 </script>
