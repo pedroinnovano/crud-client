@@ -52,7 +52,8 @@ export async function createCustomer(payload) {
 
 export async function getCustomer(id) {
     const response = await axios.get(`${API_URL}/customers/${id}`)
-    return response.data
+    // Handle both direct data and wrapped data responses
+    return response.data.data || response.data
 }
 
 export async function updateCustomer(id, customerData) {

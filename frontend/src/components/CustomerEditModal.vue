@@ -125,13 +125,18 @@ async function loadCustomer() {
     loading.value = true
     const customer = await getCustomer(props.customerId)
     
+    console.log('Customer data received:', customer)
+    
     // Populate form with customer data
     Object.keys(form).forEach(key => {
       if (customer[key] !== undefined) {
         form[key] = customer[key]
       }
     })
+    
+    console.log('Form populated:', form)
   } catch (err) {
+    console.error('Error loading customer:', err)
     apiError.value = 'Erro ao carregar dados do contato'
   } finally {
     loading.value = false
