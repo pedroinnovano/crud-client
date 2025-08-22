@@ -203,12 +203,100 @@
                     }
                 }
             }
+        },
+        "/api/reports/customers-per-month": {
+            "get": {
+                "tags": [
+                    "Relatórios"
+                ],
+                "summary": "Clientes cadastrados por mês (últimos 12 meses)",
+                "operationId": "6a23cd0d54ec14abd2313dd3677f9b97",
+                "responses": {
+                    "200": {
+                        "description": "Dados dos clientes por mês"
+                    }
+                }
+            }
+        },
+        "/api/reports/customer-count-by-city": {
+            "get": {
+                "tags": [
+                    "Relatórios"
+                ],
+                "summary": "Clientes por cidade",
+                "operationId": "518bff5d9ef881908ae1668c8c3514fb",
+                "responses": {
+                    "200": {
+                        "description": "Quantidade de clientes por cidade"
+                    }
+                }
+            }
+        },
+        "/api/reports/customer-count-by-state": {
+            "get": {
+                "tags": [
+                    "Relatórios"
+                ],
+                "summary": "Clientes por estado",
+                "operationId": "3c0abff3dbee1644037c00b46b639869",
+                "responses": {
+                    "200": {
+                        "description": "Quantidade de clientes por estado"
+                    }
+                }
+            }
+        },
+        "/api/reports/customer-percentage-by-state": {
+            "get": {
+                "tags": [
+                    "Relatórios"
+                ],
+                "summary": "Distribuição percentual por estado",
+                "operationId": "41416e35f7497d18d9120266fec9645a",
+                "responses": {
+                    "200": {
+                        "description": "Percentual de clientes por estado"
+                    }
+                }
+            }
+        },
+        "/api/reports/customer-count-by-age-range": {
+            "get": {
+                "tags": [
+                    "Relatórios"
+                ],
+                "summary": "Clientes por faixa etária",
+                "operationId": "e7b926f404d1f6a76650a2a8356813e4",
+                "responses": {
+                    "200": {
+                        "description": "Quantidade de clientes por faixa etária"
+                    }
+                }
+            }
+        },
+        "/api/reports/top-cities-with-most-customers": {
+            "get": {
+                "tags": [
+                    "Relatórios"
+                ],
+                "summary": "Top 5 cidades com mais clientes",
+                "operationId": "ea4877d9d72e0a9d9e70c50096e9460d",
+                "responses": {
+                    "200": {
+                        "description": "Top cidades com mais clientes"
+                    }
+                }
+            }
         }
     },
     "tags": [
         {
             "name": "Clientes",
             "description": "Clientes"
+        },
+        {
+            "name": "Relatórios",
+            "description": "Relatórios"
         }
     ]
 }

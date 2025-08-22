@@ -20,13 +20,13 @@ class SendCustomerWebhook
         Log::info('Webhook URL:', [$url]);
 
         Http::post($url, [
-            'name' => $customer->name,
+            'name'  => $customer->name,
             'email' => $customer->email,
             'phone' => $customer->phone,
-            'city' => $customer->city,
+            'city'  => $customer->city,
             'state' => $customer->state,
             'photo' => $customer->photo,
-            'age' => $customer->age,
+            'age'   => $customer->age,
         ]);
     }
 }
