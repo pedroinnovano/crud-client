@@ -1,0 +1,52 @@
+# Environment files (apenas na raiz)
+/.env
+/.env.local
+/.env.development.local
+/.env.test.local
+/.env.production.local
+
+# IDE files (apenas na raiz)
+/.vscode/
+/.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs (apenas na raiz)
+/logs/
+*.log
+
+# Docker (apenas na raiz)
+/.docker/
+/docker-compose.override.yml
+
+# Cache (apenas na raiz)
+/.cache/
+/.parcel-cache/
+
+# Temporary folders (apenas na raiz)
+/tmp/
+/temp/
+
+# Database (apenas na raiz)
+/*.sqlite
+/*.sqlite3
+/*.db
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Ignore all .env files except .env.example (apenas na raiz)
+/.env*
+!/.env.example
