@@ -9,6 +9,18 @@
             {{ field.label }}
           </label>
           <input
+              v-if="field.name === 'phone'"
+              v-model="form[field.name]"
+              :id="field.name"
+              :type="field.type"
+              class="w-full border rounded-md px-4 py-2 mt-1"
+              :class="{'border-red-500': errors[field.name]}"
+              :placeholder="field.placeholder"
+              @input="formatPhone"
+              maxlength="15"
+          />
+          <input
+              v-else
               v-model="form[field.name]"
               :id="field.name"
               :type="field.type"
@@ -68,6 +80,28 @@ const fields = [
   { name: 'photo', label: 'URL da Foto', type: 'text', placeholder: 'https://...' },
   { name: 'age', label: 'Idade', type: 'number', placeholder: '30' }
 ]
+
+function formatPhone(event) {
+  let value = event.target.value.replace(/\D/g, '')
+  
+  if (value.length <= 10) {
+    // Format: (XX) XXXX-XXXX for landline
+    if (value.length >= 10) {
+      value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3')
+    } else if (value.length >= 6) {
+      value = value.replace(/(\d{2})(\d{4})(\d*)/, '($1) $2-$3')
+    } else if (value.length >= 2) {
+      value = value.replace(/(\d{2})(\d*)/, '($1) $2')
+    } else if (value.length >= 1) {
+      value = value.replace(/(\d*)/, '($1')
+    }
+  } else {
+    // Format: (XX) 9XXXX-XXXX for mobile
+    value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
+  }
+  
+  form.phone = value
+}
 
 function validate() {
   errors.name = !form.name ? 'Nome é obrigatório' : ''
