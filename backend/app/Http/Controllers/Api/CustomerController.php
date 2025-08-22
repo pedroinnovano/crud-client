@@ -35,15 +35,28 @@ class CustomerController extends Controller
      *     path="/api/customers",
      *     summary="Listar clientes",
      *     tags={"Clientes"},
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Filtrar por nome do cliente",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Lista de clientes"
      *     )
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        $customers = Customer::latest()->paginate(10);
+        $query = Customer::query();
+        
+        if ($request->has('name') && !empty($request->name)) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+        
+        $customers = $query->latest()->paginate(10);
         return new CustomerCollection($customers);
     }
 

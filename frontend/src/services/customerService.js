@@ -41,8 +41,12 @@ function normalizePaginationData(data) {
     return normalizedData
 }
 
-export async function getCustomers(page = 1) {
-    const response = await axios.get(`${API_URL}/customers?page=${page}`)
+export async function getCustomers(page = 1, searchName = '') {
+    let url = `${API_URL}/customers?page=${page}`
+    if (searchName && searchName.trim()) {
+        url += `&name=${encodeURIComponent(searchName.trim())}`
+    }
+    const response = await axios.get(url)
     return normalizePaginationData(response.data)
 }
 

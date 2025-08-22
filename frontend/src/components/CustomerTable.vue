@@ -1,30 +1,6 @@
 <template>
   <div class="bg-white">
-    <!-- Search Bar -->
-    <div class="flex items-center justify-between mb-6">
-      <div class="relative flex-1 max-w-md">
-        <input
-          type="text"
-          placeholder="Buscar contato"
-          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-          v-model="searchQuery"
-        >
-        <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-        </svg>
-      </div>
-      <button
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition ml-4"
-        @click="$emit('create')"
-      >
-        <span class="text-lg">+</span> Adicionar contato
-      </button>
-      <button class="ml-2 p-2 text-gray-400 hover:text-gray-600">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-        </svg>
-      </button>
-    </div>
+
 
     <!-- Table -->
     <div class="overflow-x-auto">
@@ -47,7 +23,7 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
         <tr
-            v-for="customer in filteredCustomers"
+            v-for="customer in customers"
             :key="customer.id"
             class="hover:bg-gray-50 transition"
         >
@@ -76,7 +52,7 @@
           </td>
         </tr>
 
-        <tr v-if="!filteredCustomers.length">
+        <tr v-if="!customers.length">
           <td colspan="7" class="text-center py-12 text-gray-400">
             <div class="flex flex-col items-center justify-center">
               <svg
@@ -134,27 +110,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-
 const props = defineProps({
   customers: Array,
   pagination: Object
-})
-
-const searchQuery = ref('')
-
-const filteredCustomers = computed(() => {
-  if (!searchQuery.value) {
-    return props.customers
-  }
-  return props.customers.filter(customer => 
-    customer.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    customer.email.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    customer.phone.includes(searchQuery.value) ||
-    customer.city.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    customer.state.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    customer.age.toString().includes(searchQuery.value)
-  )
 })
 
 function handlePaginationClick(link) {
