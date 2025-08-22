@@ -3,7 +3,13 @@
     <div class="bg-white w-full max-w-md p-6 rounded-xl shadow-xl relative">
       <h2 class="text-xl font-semibold mb-4">Editar Contato</h2>
 
-      <form @submit.prevent="handleSubmit" class="space-y-4">
+      <!-- Loading state while fetching customer data -->
+      <div v-if="loading && !form.name" class="flex items-center justify-center py-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <span class="ml-3 text-gray-600">Carregando dados...</span>
+      </div>
+
+      <form v-else @submit.prevent="handleSubmit" class="space-y-4">
         <div v-for="field in fields" :key="field.name">
           <label :for="field.name" class="block font-medium text-sm text-zinc-700">
             {{ field.label }}
