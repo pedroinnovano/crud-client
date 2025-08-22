@@ -1,7 +1,9 @@
 <script setup>
 import CustomerTable from '@/components/CustomerTable.vue'
 import CustomerCreateModal from '@/components/CustomerCreateModal.vue'
-import { getCustomers } from '@/services/customerService'
+import CustomerEditModal from '@/components/CustomerEditModal.vue'
+import DeleteConfirmModal from '@/components/DeleteConfirmModal.vue'
+import { getCustomers, deleteCustomer } from '@/services/customerService'
 import { onMounted, ref } from 'vue'
 
 const customers = ref([])
@@ -10,6 +12,12 @@ const currentPage = ref(1)
 const loading = ref(false)
 const searchName = ref('')
 const showModal = ref(false)
+const showEditModal = ref(false)
+const showDeleteModal = ref(false)
+const editingCustomerId = ref(null)
+const deletingCustomer = ref(null)
+const deleteLoading = ref(false)
+const deleteError = ref('')
 
 async function fetchCustomers(page = 1) {
   try {
@@ -29,6 +37,52 @@ async function fetchCustomers(page = 1) {
 function handleSearch() {
   currentPage.value = 1
   fetchCustomers(1)
+}
+
+function handleEdit(customerId) {
+  editingCustomerId.value = customerId
+  showEditModal.value = true
+}
+
+function handleDelete(customerId) {
+  const customer = customers.value.find(c => c.id === customerId)
+  deletingCustomer.value = customer
+  showDeleteModal.value = true
+  deleteError.value = ''
+}
+
+async function confirmDelete() {
+  if (!deletingCustomer.value) return
+  
+  deleteLoading.value = true
+  deleteError.value = ''
+  
+  try {
+    await deleteCustomer(deletingCustomer.value.id)
+    showDeleteModal.value = false
+    deletingCustomer.value = null
+    await fetchCustomers(currentPage.value)
+  } catch (err) {
+    deleteError.value = 'Erro ao excluir contato. Tente novamente.'
+  } finally {
+    deleteLoading.value = false
+  }
+}
+
+function cancelDelete() {
+  showDeleteModal.value = false
+  deletingCustomer.value = null
+  deleteError.value = ''
+  deleteLoading.value = false
+}
+
+function closeEditModal() {
+  showEditModal.value = false
+  editingCustomerId.value = null
+}
+
+function handleCustomerUpdated() {
+  fetchCustomers(currentPage.value)
 }
 
 function goToCreate() {
@@ -95,10 +149,25 @@ onMounted(() => fetchCustomers(1))
         :customers="customers" 
         :pagination="pagination"
         @create="goToCreate" 
-        @edit="goToEdit"
+        @edit="handleEdit"
+        @delete="handleDelete"
         @change-page="handlePageChange"
       />
     </div>
     <CustomerCreateModal v-if="showModal" @close="showModal = false" @created="handleCustomerCreated" />
+    <CustomerEditModal 
+      v-if="showEditModal" 
+      :customer-id="editingCustomerId"
+      @close="closeEditModal" 
+      @updated="handleCustomerUpdated" 
+    />
+    <DeleteConfirmModal
+       v-if="showDeleteModal"
+       :customer-name="deletingCustomer?.name || ''"
+       :loading="deleteLoading"
+       :error="deleteError"
+       @confirm="confirmDelete"
+       @cancel="cancelDelete"
+     />
   </div>
 </template>

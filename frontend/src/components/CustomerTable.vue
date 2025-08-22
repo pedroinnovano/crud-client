@@ -19,6 +19,7 @@
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cidade</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Idade</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
         </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -50,10 +51,26 @@
           <td class="px-6 py-4 whitespace-nowrap">
             <div class="text-sm text-gray-900">{{ customer.age }}</div>
           </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex space-x-2">
+              <button 
+                @click="$emit('edit', customer.id)"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition-colors"
+              >
+                Editar
+              </button>
+              <button 
+                @click="$emit('delete', customer.id)"
+                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition-colors"
+              >
+                Excluir
+              </button>
+            </div>
+          </td>
         </tr>
 
         <tr v-if="!customers.length">
-          <td colspan="7" class="text-center py-12 text-gray-400">
+          <td colspan="8" class="text-center py-12 text-gray-400">
             <div class="flex flex-col items-center justify-center">
               <svg
                   class="w-16 h-16 mb-4 text-gray-300"
@@ -121,5 +138,5 @@ function handlePaginationClick(link) {
   }
 }
 
-const emit = defineEmits(['create', 'edit', 'change-page'])
+const emit = defineEmits(['create', 'edit', 'delete', 'change-page'])
 </script>
